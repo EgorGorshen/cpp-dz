@@ -37,6 +37,6 @@ int main() {
     }
   }
 
-  std::cout << mx2 << std::endl;
+  std::cout << mx1 << mx2 << std::endl;
   return 0;
 }
