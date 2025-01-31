@@ -24,10 +24,10 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < n; ++i)
     mat[i] = new int[m];
 
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < m; ++j) {
-      // TODO: continue from this plase
-    }
+  bool flag = false;
+  int c = 0;
+  int i = 0, j = 0;
+  while (i * m + j < n * m) {
   }
 
   for (int i = 0; i < n; ++i)
