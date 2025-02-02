@@ -20,15 +20,21 @@
 // Требуется вывести заданную последовательность в обратном порядке.
 #include <iostream>
 
+void recursev_out(int times) {
+  int n;
+  std::cin >> n;
+  times--;
+  if (times == 0) {
+    std::cout << n << ' ';
+    return;
+  }
+  recursev_out(times);
+  std::cout << n << ' ';
+}
+
 int main(int argc, char *argv[]) {
   int n;
   std::cin >> n;
-  int ls[n];
-  for (int i = 0; i < n; ++i)
-    std::cin >> ls[i];
-
-  for (int i = n - 1; i >= 0; --i)
-    std::cout << ls[i] << ' ';
-
+  recursev_out(n);
   return 0;
 }
