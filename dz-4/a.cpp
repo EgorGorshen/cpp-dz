@@ -1,4 +1,4 @@
-/* Copyright 2024 EgorGorshen */
+/* Copyright 2025 EgorGorshen */
 
 // A. НОД n чисел с подпрограммой
 //
