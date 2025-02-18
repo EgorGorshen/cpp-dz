@@ -28,6 +28,8 @@
 // Формат вывода
 //
 // Выведите список студентов в формате "имя фамилия день.месяц.год".
+// TODO: переделай (ошибка на 4ой задаче)
+#include <algorithm>
 #include <iostream>
 #include <istream>
 #include <ostream>
@@ -36,24 +38,30 @@
 
 struct Date {
     unsigned short day;
-    unsigned short monthe;
+    unsigned short month;
     unsigned int year;
 
-    bool operator==(const Date&) const = default;
-};
-
-bool operator>(const Date& obj1, const Date& obj2) {
-    if (obj1.year != obj2.year) {
-        return obj1.year > obj2.year;
-    }
-    if (obj1.monthe != obj2.monthe) {
-        return obj1.monthe > obj2.monthe;
-    }
-    return obj1.day > obj2.day;
+    bool operator==(const Date& obj) const {
+        return (this->day == obj.day) && (this->month == obj.month) &&
+               (this->year == obj.year);
+    };
+    bool operator!=(const Date& obj) const {
+        return !(*this == obj);
+    };
 };
 
 bool operator<(const Date& obj1, const Date& obj2) {
-    return obj2 > obj1;
+    if (obj1.year != obj2.year) {
+        return obj1.year < obj2.year;
+    }
+    if (obj1.month != obj2.month) {
+        return obj1.month < obj2.month;
+    }
+    return obj1.day < obj2.day;
+};
+
+bool operator>(const Date& obj1, const Date& obj2) {
+    return obj2 < obj1;
 };
 
 bool operator<=(const Date& obj1, const Date& obj2) {
@@ -63,28 +71,52 @@ bool operator<=(const Date& obj1, const Date& obj2) {
 bool operator>=(const Date& obj1, const Date& obj2) {
     return (obj1 > obj2) || (obj1 == obj2);
 };
+
 std::ostream& operator<<(std::ostream& os, const Date& obj) {
-    return os << obj.day << '.' << obj.monthe << '.' << obj.year;
+    return os << obj.day << '.' << obj.month << '.' << obj.year;
 }
 
 std::istream& operator>>(std::istream& is, Date& obj) {
-    return is >> obj.day >> obj.monthe >> obj.year;
+    return is >> obj.day >> obj.month >> obj.year;
 }
 
 struct Student {
     std::string name;
-    std::string firstName;
+    std::string lastName;
 
     Date birthday;
 };
 
 std::ostream& operator<<(std::ostream& os, const Student& obj) {
-    return os << obj.name << ' ' << obj.firstName << ' ' << obj.birthday;
+    return os << obj.name << ' ' << obj.lastName << ' ' << obj.birthday;
 }
 
 std::istream& operator>>(std::istream& is, Student& obj) {
-    return is >> obj.name >> obj.firstName >> obj.birthday;
+    return is >> obj.name >> obj.lastName >> obj.birthday;
 }
+
+bool sort_by_data(const Student& obj1, const Student& obj2) {
+    if (obj1.birthday != obj2.birthday) {
+        return obj1.birthday < obj2.birthday;
+    }
+    if (obj1.lastName != obj2.lastName) {
+        return obj1.lastName < obj2.lastName;
+    }
+
+    return obj1.name < obj2.name;
+}
+
+bool sort_by_name(const Student& obj1, const Student& obj2) {
+    if (obj1.lastName != obj2.lastName) {
+        return obj1.lastName < obj2.lastName;
+    }
+
+    if (obj1.name != obj2.name) {
+        return obj1.name < obj2.name;
+    }
+
+    return obj1.birthday < obj2.birthday;
+};
 
 int main() {
     int N;
@@ -98,22 +130,8 @@ int main() {
     }
     std::cin >> sort_type;
 
-    if (sort_type == "date") {
-        std::sort(student_list.begin(), student_list.end(),
-                  [](const Student& obj1, const Student& obj2) -> bool {
-                      return obj1.birthday < obj2.birthday;
-                  });
-    } else {
-        std::sort(student_list.begin(), student_list.end(),
-                  [](const Student& obj1, const Student& obj2) -> bool {
-                      if (obj1.firstName != obj2.firstName) {
-                          return obj1.firstName < obj2.firstName;
-                      } else if (obj1.name != obj1.name) {
-                          return obj1.name < obj1.name;
-                      }
-                      return obj1.birthday < obj2.birthday;
-                  });
-    }
+    std::sort(student_list.begin(), student_list.end(),
+              sort_type == "date" ? sort_by_data : sort_by_name);
 
     for (Student stud : student_list) {
         std::cout << stud << std::endl;
